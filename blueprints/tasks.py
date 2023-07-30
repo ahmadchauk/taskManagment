@@ -1,4 +1,4 @@
-from models.models import db, Task
+from models.models import db, Task, Category
 from flask import Blueprint, request, jsonify
 from datetime import datetime
 from utils.decorator import handle_api_errors
@@ -60,6 +60,10 @@ def manageTask(id):
                 }
             )
 
+        category = Category.query.get(category_id)
+        if category is None:
+            return jsonify({"status": False, "msg": "Category not found"}), 404
+        
         if datetime.strptime(due_date, "%Y-%m-%d").date() < current_date:
             return jsonify(
                 {"status": False, "msg": "due date choosed is lower than today"}
@@ -111,6 +115,11 @@ def tasks():
                     "msg": "please choose a priority from this list [high , medium , low]",
                 }
             )
+
+        category = Category.query.get(category_id)
+
+        if category is None:
+            return jsonify({"status": False, "msg": "Category not found"}), 404
 
         if datetime.strptime(due_date, "%Y-%m-%d").date() < current_date:
             return jsonify(
