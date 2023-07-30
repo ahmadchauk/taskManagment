@@ -39,10 +39,4 @@ python server.py
 The server will be running on `http://127.0.0.1:5000/`
 
 
-## API Endpoints
 
-- [GET tasks](docs/get_tasks.md)
-- [GET tasks/:id](docs/get_task.md)
-- [POST tasks/](docs/post_task.md)
-- [PUT tasks/:id](docs/put_task.md)
-- [DELETE tasks/:id](docs/delete_task.md)
