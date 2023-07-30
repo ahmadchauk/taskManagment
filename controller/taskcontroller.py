@@ -6,8 +6,8 @@ def get_all_tasks():
     return tasks
 
 
-def create_task(db, title,category_id, description):
-    task = Task(title, category_id, description)
+def create_task(db, title, category_id, priority, due_date, description):
+    task = Task(title, category_id, priority, due_date, description)
     db.session.add(task)
     db.session.commit()
     return task
@@ -18,6 +18,8 @@ def update_task(db, task, body):
     task.description = body.get("description", task.description)
     task.completed = body.get("completed", task.completed)
     task.category_id = body.get("category_id", task.category_id)
+    task.due_date = body.get("due_date", task.due_date)
+    task.priority = body.get("priority", task.priority).upper()
     db.session.commit()
 
 
