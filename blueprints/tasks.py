@@ -1,13 +1,11 @@
-from models.models import db
-from models.models import Task
-from flask import Blueprint, request
-from controller.taskcontroller import (
+from models.models import db, Task
+from flask import Blueprint, request, jsonify
+from controller.taskController import (
     get_all_tasks,
     create_task,
     update_task,
     delete_task,
 )
-from flask import jsonify
 
 tasks_blueprint = Blueprint("tasks_blueprint", __name__)
 
@@ -26,12 +24,14 @@ def manageTask(id):
         title = body.get("title")
         description = body.get("description")
         completed = body.get("completed")
-        if not title or not description or not completed:
+        category_id = body.get("category_id")
+        if not title or not description or not completed or not category_id:
             return jsonify({"Status": False, "msg": "missing fields"})
         if (
             not isinstance(title, str)
             or not isinstance(description, str)
             or not isinstance(completed, bool)
+            or not isinstance(category_id, int)
         ):
             return jsonify({"status": False, "msg": "invalid json request"})
         update_task(db, task, body)
@@ -54,12 +54,17 @@ def users():
         body = request.get_json()
         title = body.get("title")
         description = body.get("description")
+        category_id = body.get("category_id")
 
-        if not title or description:
+        if not title or not description or not category_id:
             return jsonify({"status": False, "msg": "missing fields"})
-        if not isinstance(title, str) or not isinstance(description, str):
+        if (
+            not isinstance(title, str)
+            or not isinstance(description, str)
+            or not isinstance(category_id, int)
+        ):
             return jsonify({"status": False, "msg": "invalid json request"})
 
-        task = create_task(db, title, description)
+        task = create_task(db, title, category_id, description)
 
         return jsonify(task.serialize()), 201
