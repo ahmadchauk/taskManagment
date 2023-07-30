@@ -1,5 +1,6 @@
 from models.models import Category, db
 from flask import Blueprint, request, jsonify
+from utils.decorator import handle_api_errors
 from controller.categoryController import (
     get_all_categories,
     create_category,
@@ -11,6 +12,7 @@ categories_blueprint = Blueprint("categories_blueprint", __name__)
 
 
 @categories_blueprint.route("/categories/<id>", methods=["GET", "PUT", "DELETE"])
+@handle_api_errors
 def manageCategory(id):
     category = Category.query.get(id)
 
@@ -36,6 +38,7 @@ def manageCategory(id):
 
 
 @categories_blueprint.route("/categories/", methods=["GET", "POST"])
+@handle_api_errors
 def categories():
     if request.method == "GET":
         categories = get_all_categories()

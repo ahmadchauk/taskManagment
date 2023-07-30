@@ -1,6 +1,7 @@
 from models.models import db, Task
 from flask import Blueprint, request, jsonify
 from datetime import datetime
+from utils.decorator import handle_api_errors
 from controller.taskController import (
     get_all_tasks,
     create_task,
@@ -16,13 +17,14 @@ current_date = datetime.now().date()
 
 
 @tasks_blueprint.route("/tasks/<id>/", methods=["GET", "PUT", "DELETE"])
+@handle_api_errors
 def manageTask(id):
     task = Task.query.get(id)
     if task is None:
         return jsonify({"status": False, "msg": "Task not found"}), 404
 
     if request.method == "GET":
-        return jsonify(task.serialize())
+        return jsonify({"status": True, "data": task.serialize()})
 
     if request.method == "PUT":
         body = request.get_json()
@@ -71,12 +73,11 @@ def manageTask(id):
 
 
 @tasks_blueprint.route("/tasks/", methods=["GET", "POST"])
-def users():
+@handle_api_errors
+def tasks():
     if request.method == "GET":
         tasks = get_all_tasks()
-        if isinstance(tasks, Task):
-            return jsonify(tasks.serialize())
-        return jsonify([task.serialize() for task in tasks])
+        return jsonify({"status": True, "data": [task.serialize() for task in tasks]})
 
     if request.method == "POST":
         body = request.get_json()
@@ -124,7 +125,7 @@ def users():
                 {
                     "status": True,
                     "msg": "Task inserted successfuly",
-                    "task": task.serialize(),
+                    "data": task.serialize(),
                 }
             ),
             201,
