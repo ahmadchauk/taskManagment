@@ -52,4 +52,6 @@ def categories():
             return jsonify({"status": False, "msg": "invalid json request"})
 
         cateory = create_category(db, title)
-        return jsonify(cateory.serialize()), 201
+        return jsonify({"status": True, "msg": "Category inserted successfuly" , "category" : cateory.serialize()}) , 201
+
+        # return jsonify(cateory.serialize()), 201

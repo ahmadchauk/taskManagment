@@ -8,23 +8,26 @@
 
 ### Install and configure PostgreSQL
 
-
 Create Database name tasks_db
 
-The DATABASE_URL variable is your database url. If you are using in localhost, the URL is something like: `"postgresql://postgres:12345678@localhost:5432/tasks_db`.
+### configure environment
+
+rename .env.example to .env
+
+fill the DATABASE_URL with the link `postgresql://postgres:12345678@localhost:5432/tasks_db`
 
 ### Run migrations
 
 1.  ```
-    python app.py db init
+    flask db init
     ```
 
 2.  ```
-    python app.py db migrate
+    flask db migrate
     ```
 
 3.  ```
-    python app.py db upgrade
+    flask db upgrade
     ```
 
 ### Run the server

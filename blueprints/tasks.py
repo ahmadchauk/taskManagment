@@ -14,6 +14,7 @@ priorities = ["high", "medium", "low"]
 
 current_date = datetime.now().date()
 
+
 @tasks_blueprint.route("/tasks/<id>/", methods=["GET", "PUT", "DELETE"])
 def manageTask(id):
     task = Task.query.get(id)
@@ -57,8 +58,10 @@ def manageTask(id):
                 }
             )
 
-        if(datetime.strptime(due_date, "%Y-%m-%d").date() < current_date):
-            return jsonify({"status" : False , "msg" : "due date choosed is lower than today"})
+        if datetime.strptime(due_date, "%Y-%m-%d").date() < current_date:
+            return jsonify(
+                {"status": False, "msg": "due date choosed is lower than today"}
+            )
         update_task(db, task, body)
         return jsonify({"status": True, "msg": "Task updated successfuly"})
 
@@ -107,12 +110,24 @@ def users():
                     "msg": "please choose a priority from this list [high , medium , low]",
                 }
             )
-        
-        if(datetime.strptime(due_date, "%Y-%m-%d").date() < current_date):
-            return jsonify({"status" : False , "msg" : "due date choosed is lower than today"})
+
+        if datetime.strptime(due_date, "%Y-%m-%d").date() < current_date:
+            return jsonify(
+                {"status": False, "msg": "due date choosed is lower than today"}
+            )
 
         task = create_task(
             db, title, category_id, priority.upper(), due_date, description
         )
+        return (
+            jsonify(
+                {
+                    "status": True,
+                    "msg": "Task inserted successfuly",
+                    "task": task.serialize(),
+                }
+            ),
+            201,
+        )
 
-        return jsonify(task.serialize()), 201
+        # return jsonify(task.serialize()), 201
